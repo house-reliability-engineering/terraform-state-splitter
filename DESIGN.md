@@ -2,8 +2,9 @@
 
 This document describes the design of `terraform-state-splitter`, a tool and
 library that converts a [Terraform](https://developer.hashicorp.com/terraform)
-JSON state file into a tree of per-resource-instance YAML files (and back),
+JSON state file into a tree of per-resource-instance YAML files,
 so that state changes produce small, reviewable diffs in a VCS.
+It can reverse that conversion before Terraform reads the state.
 
 It is the Terraform-side counterpart of
 [pulumi_state_splitter](https://github.com/house-reliability-engineering/pulumi/tree/main/utilities/pulumi_state_splitter)
@@ -124,10 +125,31 @@ under `<project>/<deployment>/` mirrors the requirements:
   `<project>/<deployment>/<module-path?>/<type>/<name>.yaml`
 - Resource with `for_each` / `count`:
   - `<project>/<deployment>/<module-path?>/<type>/<name>/meta.yaml`
-    holds the per-resource metadata (`module`, `mode`, `type`, `name`,
-    `provider`) and the ordered list of instance index keys.
+    holds the per-resource metadata and the ordered list of instance index keys:
+    ```yaml
+    module: module.example
+    mode: managed
+    type: aws_instance
+    name: web
+    provider: provider["registry.terraform.io/hashicorp/aws"]
+    instances:
+      - blue
+      - green
+    ```
   - `<project>/<deployment>/<module-path?>/<type>/<name>/<index>.yaml`
-    holds one instance each.
+    holds one instance each:
+    ```yaml
+    index_key: blue
+    schema_version: 1
+    attributes:
+      id: i-0123456789abcdef0
+    sensitive_attributes:
+      - - type: get_attr
+          value: password
+    private: eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ==
+    dependencies:
+      - aws_security_group.web
+    ```
 
 `<module-path>` is the dotted Terraform module address (e.g. `module.foo.module.bar`)
 converted to nested directories (`module.foo/module.bar/`) so that diffs and
