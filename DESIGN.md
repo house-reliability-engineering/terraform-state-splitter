@@ -156,11 +156,24 @@ filesystem navigation align with Terraform's mental model.
 
 The top-level state envelope (`version`, `terraform_version`, `serial`,
 `lineage`, `outputs`, `check_results`, …) is written to
-`<project>/<workspace>/meta.yaml`. When splitting, child collections in
-parent structures are replaced with the path of the file each child was
-written to, so that an unsplit can reconstruct the exact JSON by inlining
-those files. This applies recursively: resources are children of the state
-envelope; instances are children of a `for_each`/`count` resource.
+`<project>/<workspace>/meta.yaml`. Its YAML schema stays close to
+Terraform's `stateV4` schema, except that the `resources` field is removed
+and replaced with:
+
+```yaml
+resources_paths:
+  - module.foo/aws_instance/web.yaml
+  - module.bar/aws_security_group/rules/meta.yaml
+```
+
+Each entry points at the file that defines one child resource: the singleton
+resource file for singleton resources, or the resource `meta.yaml` for
+resources with multiple instances. The same pattern is used recursively for
+multi-instance resources: their `meta.yaml` mirrors Terraform's
+`resourceStateV4`, removes `instances`, and adds `instances_paths`, whose
+entries point at the per-instance YAML files. This makes the split format
+explicit and self-describing while keeping the rest of each YAML document
+field-for-field with the corresponding Terraform V4 structure.
 
 YAML schemas mirror the Terraform V4 Go structs field-for-field; we rely on
 `sigs.k8s.io/yaml` going through JSON so the existing
@@ -184,10 +197,12 @@ against an `io/fs.FS`-plus-writer abstraction so that:
 iteration and instance ordering follows the order in the source state to
 keep diffs minimal.
 
-`unsplit` is the inverse: it walks `meta.yaml` files, resolves the
-file-reference placeholders, and feeds the reassembled tree back through
-`pkg/statefile` so the result is parsed and re-serialized by Terraform's
-own code, guaranteeing byte-equivalence with what Terraform would write.
+`unsplit` is the inverse: it walks `meta.yaml` files, loads child documents
+through `resources_paths` and `instances_paths`, reconstructs the original
+`resources` and `instances` collections in memory, and feeds the reassembled
+tree back through `pkg/statefile` so the result is parsed and re-serialized
+by Terraform's own code, guaranteeing byte-equivalence with what Terraform
+would write.
 
 ## Handling sensitive values
 
@@ -201,17 +216,25 @@ Instead, `pkg/sensitive` uses the SOPS Go SDK directly:
 
 - During `split`, for each resource instance we read Terraform's own
   `sensitive_attributes` (a list of attribute paths the provider marked as
-  sensitive) and pass those paths to the SOPS SDK as the set of nodes to
-  encrypt within the instance's YAML document. The encrypted document
-  carries SOPS metadata in a `sops:` key, exactly like a hand-edited
-  SOPS-encrypted YAML file, so it round-trips through `sops` CLI as well.
+  sensitive) and always add the `private` field to that set. Those paths are
+  passed to the SOPS SDK as the nodes to encrypt within the instance's YAML
+  document. The encrypted document carries SOPS metadata in a `sops:` key,
+  exactly like a hand-edited SOPS-encrypted YAML file, so it round-trips
+  through `sops` CLI as well.
 - During `unsplit`, each instance file is decrypted through the same SDK
   before reassembly. Files without a `sops:` block are passed through
   unchanged, which keeps the tool usable on unencrypted backends.
 
 Key material configuration (`.sops.yaml`) is read by the SDK in the usual
 way from the working tree, so the encryption policy stays declarative and
-shared with the rest of our tooling.
+shared with the rest of our tooling. We configure SOPS metadata to match the
+semantics of `--mac-only-encrypted`, so the MAC covers encrypted values but
+not unrelated cleartext fields. To keep ciphertext stable across subsequent
+`split` runs, `pkg/sensitive` performs a merge against any existing split
+instance file at the target path: unchanged encrypted nodes reuse their
+existing ciphertext and the enclosing SOPS metadata, while changed nodes are
+re-encrypted and the MAC is recomputed. That preserves review-friendly diffs
+without weakening the authenticity guarantees for modified secrets.
 
 ## CLI
 
@@ -234,6 +257,12 @@ terraform-state-splitter [-d BACKEND_DIRECTORY] <command>
   [gitolize](https://github.com/house-reliability-engineering/gitolize):
   gitolize handles atomicity, locking, backup and diffing around the
   invocation; we only handle the format conversion in between.
+
+`run` unsplits all selected workspaces before invoking the wrapped command
+and re-splits the same set afterward. Selecting multiple workspaces, or all
+discoverable workspaces under the backend directory, is therefore a first-
+class workflow rather than an optimisation, and is what makes Terraform's
+`terraform_remote_state` data source work correctly during wrapped runs.
 
 The `run` command propagates the wrapped process's exit code so it composes
 with shell pipelines and CI.
