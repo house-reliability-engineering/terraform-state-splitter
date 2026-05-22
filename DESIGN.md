@@ -117,13 +117,13 @@ library reusability maps to one `pkg/` subpackage:
 
 ## On-disk layout
 
-For a Terraform state read from `<project>/<deployment>.json`, the split tree
-under `<project>/<deployment>/` mirrors the requirements:
+For a Terraform state read from `<project>/<workspace>.json`, the split tree
+under `<project>/<workspace>/` mirrors the requirements:
 
 - Singleton resource:
-  `<project>/<deployment>/<module-path?>/<type>/<name>.yaml`
+  `<project>/<workspace>/<module-path?>/<type>/<name>.yaml`
 - Resource with `for_each` / `count`:
-  - `<project>/<deployment>/<module-path?>/<type>/<name>/meta.yaml`
+  - `<project>/<workspace>/<module-path?>/<type>/<name>/meta.yaml`
     holds the per-resource metadata and the ordered list of instance index keys:
     ```yaml
     module: module.example
@@ -135,7 +135,7 @@ under `<project>/<deployment>/` mirrors the requirements:
       - blue
       - green
     ```
-  - `<project>/<deployment>/<module-path?>/<type>/<name>/<index>.yaml`
+  - `<project>/<workspace>/<module-path?>/<type>/<name>/<index>.yaml`
     holds one instance each:
     ```yaml
     index_key: blue
@@ -156,7 +156,7 @@ filesystem navigation align with Terraform's mental model.
 
 The top-level state envelope (`version`, `terraform_version`, `serial`,
 `lineage`, `outputs`, `check_results`, …) is written to
-`<project>/<deployment>/meta.yaml`. When splitting, child collections in
+`<project>/<workspace>/meta.yaml`. When splitting, child collections in
 parent structures are replaced with the path of the file each child was
 written to, so that an unsplit can reconstruct the exact JSON by inlining
 those files. This applies recursively: resources are children of the state
@@ -220,15 +220,15 @@ command tree modelled on `pulumi_state_splitter`:
 
 ```
 terraform-state-splitter [-d BACKEND_DIRECTORY] <command>
-  split    [-s PROJECT/DEPLOYMENT ...]
-  unsplit  [-s PROJECT/DEPLOYMENT ...]
-  run      [-s PROJECT/DEPLOYMENT ...] -- <command> [args...]
+  split    [-s PROJECT/WORKSPACE ...]
+  unsplit  [-s PROJECT/WORKSPACE ...]
+  run      [-s PROJECT/WORKSPACE ...] -- <command> [args...]
 ```
 
-- `split` discovers `<project>/<deployment>.json` files under the backend
+- `split` discovers `<project>/<workspace>.json` files under the backend
   directory and writes the corresponding split trees.
 - `unsplit` is the inverse.
-- `run` `unsplit`s the selected deployments, executes the wrapped command
+- `run` `unsplit`s the selected workspace, executes the wrapped command
   (typically `terraform …`), and `split`s the result back. It is the
   primary entry point for day-to-day use and the integration point with
   [gitolize](https://github.com/house-reliability-engineering/gitolize):
@@ -271,7 +271,7 @@ explicitly delegates atomicity, backup, locking and integrity to gitolize.
   model than `statefile`) for callers that want to manipulate the parsed
   state. Initial implementation will not, to keep the vendored surface
   small; we will revisit if a concrete consumer needs it.
-- Whether the `run` subcommand should split only deployments touched by
+- Whether the `run` subcommand should split only workspaces touched by
   the wrapped command. Initial implementation will split all selected
-  deployments unconditionally; selectivity is an optimisation, not a
+  workspaces unconditionally; selectivity is an optimisation, not a
   correctness concern.

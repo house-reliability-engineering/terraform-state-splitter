@@ -13,15 +13,15 @@
   but should correctly work without it.
 
 - terraform JSON state file should be read from and written to the following path:
-  `<project-name>/<deployment-name>.json` .
+  `<project-name>/<worskspace-name>.json` .
 
 - each resource instance should be stored in a separate file.
   The resource file path in the state repository tree should be of the form:
-  - singletons: `<project-name>/<deployment-name>/<optional module-path>/<resource-type>/<resource-name>.yaml`
+  - singletons: `<project-name>/<workspace-name>/<optional module-path>/<resource-type>/<resource-name>.yaml`
   - resources with `for_each` or `count`:
-    - `<project-name>/<deployment-name>/<optional module-path>/<resource-type>/<resource-name>/meta.yaml`
+    - `<project-name>/<workspace-name>/<optional module-path>/<resource-type>/<resource-name>/meta.yaml`
       for `module`, `mode`, `type`, `name`, `provider` and instances index keys list.
-    - `<project-name>/<deployment-name>/<optional module-path>/<resource-type>/<resource-name>/<resource-index>.yaml`
+    - `<project-name>/<workspace-name>/<optional module-path>/<resource-type>/<resource-name>/<resource-index>.yaml`
       for particular instances
 
 - lay out the code so that it can be reused as a library, for example for:
