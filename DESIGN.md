@@ -85,7 +85,7 @@ is preferred over re-implementation because:
 | Filesystem abstraction | `io/fs` + a thin in-package interface                                                            | Enables in-memory testing and avoids temporary files per [AGENTS-CODING.md](../../vertexinc/taxamo-home-filip/AGENTS-CODING.md).        |
 | Testing               | Standard `testing` + [`github.com/google/go-cmp`](https://pkg.go.dev/github.com/google/go-cmp)    | Built-in tooling; `cmp` gives readable diffs for round-trip tests.                                                                     |
 | Linting               | [`golangci-lint`](https://golangci-lint.run/) with `gofmt`, `govet`, `staticcheck`, `errcheck`    | Standard Go toolchain.                                                                                                                 |
-| Pre-commit hooks      | [`pre-commit`](https://pre-commit.com/) running `gofmt`, `golangci-lint`, `go test`, `go vet`     | Enforces the rules from [AGENTS-CODING.md](../../vertexinc/taxamo-home-filip/AGENTS-CODING.md).                                        |
+| Pre-commit hooks      | [`pre-commit`](https://pre-commit.com/) running `gofmt`, `golangci-lint`, `go test`, `go vet`     | Enforces the rules from [AGENTS-CODING.md](https://github.com/vertexinc/taxamo-home-filip/blob/master/AGENTS-CODING.md).                                        |
 
 ## Repository layout
 
@@ -177,7 +177,7 @@ against an `io/fs.FS`-plus-writer abstraction so that:
 - production code uses an `os`-backed implementation rooted at the
   backend directory;
 - tests use an in-memory implementation, satisfying the
-  [AGENTS-CODING.md](../../vertexinc/taxamo-home-filip/AGENTS-CODING.md)
+  [AGENTS-CODING.md](https://github.com/vertexinc/taxamo-home-filip/blob/master/AGENTS-CODING.md)
   rule against temporary files.
 
 `split` is deterministic: map iteration is replaced with sorted-key
@@ -261,7 +261,7 @@ explicitly delegates atomicity, backup, locking and integrity to gitolize.
   key (committed under `testdata/`) to encrypt/decrypt without external
   dependencies.
 - **CLI tests**: exercise cobra commands against an in-memory filesystem.
-- Per [AGENTS-CODING.md](../../vertexinc/taxamo-home-filip/AGENTS-CODING.md),
+- Per [AGENTS-CODING.md](https://github.com/vertexinc/taxamo-home-filip/blob/master/AGENTS-CODING.md)
   we target 100% meaningful coverage and enforce it via `go test -cover`
   in pre-commit and CI.
 
