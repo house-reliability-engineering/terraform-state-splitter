@@ -95,7 +95,6 @@ terraform-state-splitter/
 ├── pkg/
 │   ├── cli/                        # cobra commands, importable for embedding
 │   ├── splitter/                   # split / unsplit pure functions over in-memory trees
-│   ├── layout/                     # path conventions (project/deployment/...)
 │   ├── sensitive/                  # SOPS-backed encrypt/decrypt of YAML nodes
 │   ├── stored/                     # discovery and IO of split state on a filesystem
 │   └── statefile/                  # facade over the vendored terraform package
