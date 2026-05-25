@@ -61,7 +61,7 @@
   [`private`](https://github.com/hashicorp/terraform/blob/42fe426/internal/states/statefile/version4.go#L715)
   field unless we can prove that providers never store sensitive data there.
 
-- The SOPS mac should be calculated for encrypted values, similar to the effect of the
+- The SOPS MAC should be calculated for encrypted values, similar to the effect of the
   [`--mac-only-encrypted`](https://github.com/getsops/sops/blob/42c158d/cmd/sops/main.go#L1817-L1820)
   SOPS flag.
 

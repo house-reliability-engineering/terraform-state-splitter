@@ -248,10 +248,10 @@ terraform-state-splitter [-d BACKEND_DIRECTORY] <command>
   run      [-s PROJECT/WORKSPACE ...] -- <command> [args...]
 ```
 
-- `split` discovers `<project>/<workspace>.json` files under the backend
-  directory and writes the corresponding split trees.
+- `split` loads selected `<project>/<workspace>.json` files under the
+  backend directory and writes the corresponding split trees.
 - `unsplit` is the inverse.
-- `run` `unsplit`s the selected workspace, executes the wrapped command
+- `run` `unsplit`s the selected workspaces, executes the wrapped command
   (typically `terraform …`), and `split`s the result back. It is the
   primary entry point for day-to-day use and the integration point with
   [gitolize](https://github.com/house-reliability-engineering/gitolize):
