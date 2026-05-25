@@ -20,7 +20,7 @@ this document only covers *how* those requirements are met.
 - Round-trip a Terraform V4 JSON state to a split YAML tree with no semantic loss.
 - Produce diffs that scope cleanly to a single resource instance.
 - Encrypt the same fields that
-  [sensitive_annotator](https://github.com/vertexinc/infrastructure-state/blob/master/bin/terraform/sensitive_annotator.py)
+  [sensitive annotator](https://github.com/vertexinc/infrastructure-state/blob/master/bin/terraform/sensitive_annotator.py)
   encrypts today, without polluting the state keys with marker suffixes.
 - Be usable both as a CLI and as an embeddable Go library.
 - Be safe to run from automation that already wraps `terraform` invocations.
@@ -45,7 +45,7 @@ project for the following reasons:
   re-deriving the V4 state schema. This eliminates a whole class of
   schema-drift bugs.
 - [SOPS](https://github.com/getsops/sops) — the encryption tool used by
-  `sensitive_annotator` and by our wider tooling — is written in Go and
+  sensitive annotator and by our wider tooling — is written in Go and
   exposes a stable [Go SDK](https://pkg.go.dev/github.com/getsops/sops/v3),
   letting us encrypt/decrypt specific YAML nodes in-process rather than
   shelling out.
@@ -206,7 +206,7 @@ would write.
 
 ## Handling sensitive values
 
-[`sensitive_annotator`](https://github.com/vertexinc/infrastructure-state/blob/master/bin/terraform/sensitive_annotator.py)
+[sensitive annotator](https://github.com/vertexinc/infrastructure-state/blob/master/bin/terraform/sensitive_annotator.py)
 today renames sensitive keys with a marker suffix so that
 [SOPS](https://github.com/getsops/sops) can match them by regex. We avoid
 that because it (a) mutates state keys and (b) couples encryption policy to
