@@ -12,7 +12,7 @@
 - It should be compatible with [gitolize](https://github.com/house-reliability-engineering/gitolize),
   but should correctly work without it.
 
-- Terraform JSON state file should be read from and written to the following path:
+- The Terraform JSON state file should be read from and written to the following path:
   `<project-name>/<workspace-name>.json`.
 
 - Each resource instance should be stored in a separate file.
