@@ -24,22 +24,22 @@
     - `<project-name>/<workspace-name>/<optional module-path>/<resource-type>/<resource-name>/<resource-index>.yaml`
       for particular instances
 
-- lay out the code so that it can be reused as a library, for example for:
-  - loading split state (including decryption)
-  - loading unsplit state
-  - splitting
-  - unsplitting
-  - wrapping commands
+- Lay out the code so that it can be reused as a library, for example for:
+  - loading split state (including decryption),
+  - loading unsplit state,
+  - splitting,
+  - unsplitting,
+  - wrapping commands.
 
-- the `run` command should support unsplitting multiple states at once (optionally all) so that the
+- The `run` command should support unsplitting multiple states at once (optionally all) so that the
   [`terraform_remote_state`](https://developer.hashicorp.com/terraform/language/state/remote-state-data)
   data source works properly.
 
-- keep YAML schemas as close as possible to corresponding
+- Keep YAML schemas as close as possible to corresponding
   [Terraform V4 state](https://github.com/hashicorp/terraform/blob/main/internal/states/statefile/version4.go)
   schema components.
 
-- when splitting the state structure to separate files,
+- When splitting the state structure to separate files,
   the child structures should be removed from the parent structure,
   and the parent structure should get an extra attribute containing
   a list of paths of files containing the definitions of the child resources,
@@ -69,22 +69,22 @@
 
 ### Other
 
-- if Go is a preferred language over Rust, then
-  - provide rationale for this preference.
-  - use Terraform code for state schema, possibly including loading and saving
+- If Go is a preferred language over Rust, then
+  - provide rationale for this preference,
+  - use Terraform code for state schema, possibly including loading and saving.
 
 ## Non-requirements
 
 - Handling file name length limits.
 - `validate` CLI command.
-- handling preexisting output files
-- describing gitolize functionality
-- staging of file changes
+- Handling preexisting output files.
+- Describing gitolize functionality.
+- Staging of file changes.
 - gitolize functionality:
-  - ensuring atomicity
-  - performing backups
-  - calculating and verifying checksums
-  - diffing
-  - locking
-  - integrity checks
+  - ensuring atomicity,
+  - performing backups,
+  - calculating and verifying checksums,
+  - diffing,
+  - locking,
+  - integrity checks.
 
