@@ -10,18 +10,18 @@
   but for Terraform.
 
 - It should be compatible with [gitolize](https://github.com/house-reliability-engineering/gitolize),
-  but should correctly work without it.
+  but should work correctly without it.
 
 - The Terraform JSON state file should be read from and written to the following path:
   `<project-name>/<workspace-name>.json`.
 
 - Each resource instance should be stored in a separate file.
   The resource file path in the state repository tree should be of the form:
-  - singletons: `<project-name>/<workspace-name>/<optional module-path>/<resource-type>/<resource-name>.yaml`
+  - singletons: `<project-name>/<workspace-name>/<module-path?>/<resource-type>/<resource-name>.yaml`
   - resources with `for_each` or `count`:
-    - `<project-name>/<workspace-name>/<optional module-path>/<resource-type>/<resource-name>/meta.yaml`
+    - `<project-name>/<workspace-name>/<module-path?>/<resource-type>/<resource-name>/meta.yaml`
       for `module`, `mode`, `type`, `name`, `provider`, and the list of instance index keys.
-    - `<project-name>/<workspace-name>/<optional module-path>/<resource-type>/<resource-name>/<resource-index>.yaml`
+    - `<project-name>/<workspace-name>/<module-path?>/<resource-type>/<resource-name>/<resource-index>.yaml`
       for particular instances
 
 - Lay out the code so that it can be reused as a library, for example for:
