@@ -300,7 +300,3 @@ explicitly delegates atomicity, backup, locking and integrity to gitolize.
   model than `statefile`) for callers that want to manipulate the parsed
   state. Initial implementation will not, to keep the vendored surface
   small; we will revisit if a concrete consumer needs it.
-- Whether the `run` subcommand should split only workspaces touched by
-  the wrapped command. Initial implementation will split all selected
-  workspaces unconditionally; selectivity is an optimisation, not a
-  correctness concern.
