@@ -20,7 +20,7 @@
   - singletons: `<project-name>/<workspace-name>/<optional module-path>/<resource-type>/<resource-name>.yaml`
   - resources with `for_each` or `count`:
     - `<project-name>/<workspace-name>/<optional module-path>/<resource-type>/<resource-name>/meta.yaml`
-      for `module`, `mode`, `type`, `name`, `provider` and instances index keys list.
+      for `module`, `mode`, `type`, `name`, `provider`, and the list of instance index keys.
     - `<project-name>/<workspace-name>/<optional module-path>/<resource-type>/<resource-name>/<resource-index>.yaml`
       for particular instances
 
