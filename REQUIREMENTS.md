@@ -13,7 +13,7 @@
   but should correctly work without it.
 
 - terraform JSON state file should be read from and written to the following path:
-  `<project-name>/<worskspace-name>.json` .
+  `<project-name>/<workspace-name>.json`.
 
 - each resource instance should be stored in a separate file.
   The resource file path in the state repository tree should be of the form:
