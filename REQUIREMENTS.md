@@ -7,12 +7,12 @@
 
 - This is to be a functional equivalent of
   [pulumi_state_splitter](https://github.com/house-reliability-engineering/pulumi/tree/main/utilities/pulumi_state_splitter),
-  but for terraform.
+  but for Terraform.
 
 - it should be compatible with [gitolize](https://github.com/house-reliability-engineering/gitolize),
   but should correctly work without it.
 
-- terraform JSON state file should be read from and written to the following path:
+- Terraform JSON state file should be read from and written to the following path:
   `<project-name>/<workspace-name>.json`.
 
 - each resource instance should be stored in a separate file.
@@ -44,11 +44,11 @@
   and the parent structure should get an extra attribute containing
   a list of paths of files containing the definitions of the child resources,
   for example:
-  - [`stateV4`](https://github.com/hashicorp/terraform/blob/42fe4265/internal/states/statefile/version4.go#L666-L674):
-    - [`Resources`](https://github.com/hashicorp/terraform/blob/42fe4265/internal/states/statefile/version4.go#L672) is removed,
+  - [`stateV4`](https://github.com/hashicorp/terraform/blob/42fe426/internal/states/statefile/version4.go#L666-L674):
+    - [`Resources`](https://github.com/hashicorp/terraform/blob/42fe426/internal/states/statefile/version4.go#L672) is removed,
     - `ResourcesPaths []string` is added.
-  - [`resourceStateV4`](https://github.com/hashicorp/terraform/blob/42fe4265/internal/states/statefile/version4.go#L692-L700)
-    - [`Instances`](https://github.com/hashicorp/terraform/blob/42fe4265/internal/states/statefile/version4.go#L699) is removed,
+  - [`resourceStateV4`](https://github.com/hashicorp/terraform/blob/42fe426/internal/states/statefile/version4.go#L692-L700)
+    - [`Instances`](https://github.com/hashicorp/terraform/blob/42fe426/internal/states/statefile/version4.go#L699) is removed,
     - `InstancesPaths []string` is added.
 
 ### Encryption
@@ -71,7 +71,7 @@
 
 - if Go is a preferred language over Rust, then
   - provide rationale for this preference.
-  - use terraform code for state schema, possibly including loading and saving
+  - use Terraform code for state schema, possibly including loading and saving
 
 ## Non-requirements
 
