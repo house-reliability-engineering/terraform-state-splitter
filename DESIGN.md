@@ -151,7 +151,7 @@ under `<project>/<workspace>/` mirrors the requirements:
     ```
 
 `<module-path>` is the dotted Terraform module address (e.g. `module.foo.module.bar`)
-converted to nested directories (`module.foo/module.bar/`) so that diffs and
+converted to nested directories (`module/foo/module/bar/`) so that diffs and
 filesystem navigation align with Terraform's mental model.
 
 The top-level state envelope (`version`, `terraform_version`, `serial`,
@@ -162,8 +162,8 @@ and replaced with:
 
 ```yaml
 resources_paths:
-  - module.foo/aws_instance/web.yaml
-  - module.bar/aws_security_group/rules/meta.yaml
+  - module/foo/aws_instance/web.yaml
+  - module/bar/aws_security_group/rules/meta.yaml
 ```
 
 Each entry points at the file that defines one child resource: the singleton
