@@ -91,7 +91,7 @@ is preferred over re-implementation because:
 
 ```
 terraform-state-splitter/
-├── cmd/terraform-state-splitter/   # main package, thin wrapper around cli
+├── cmd/terraform-state-splitter/   # main package, thin wrapper around CLI
 ├── pkg/
 │   ├── cli/                        # cobra commands, importable for embedding
 │   ├── splitter/                   # split / unsplit pure functions over in-memory trees
