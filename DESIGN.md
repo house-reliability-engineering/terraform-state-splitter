@@ -262,8 +262,8 @@ terraform-state-splitter [-d BACKEND_DIRECTORY] <command>
 
 `run` unsplits all selected workspaces before invoking the wrapped command
 and re-splits the same set afterward. Selecting multiple workspaces, or all
-discoverable workspaces under the backend directory, is therefore a first-
-class workflow rather than an optimisation, and is what makes Terraform's
+discoverable workspaces under the backend directory, is therefore a first-class
+workflow rather than an optimisation, and is what makes Terraform's
 `terraform_remote_state` data source work correctly during wrapped runs.
 
 The `run` command propagates the wrapped process's exit code so it composes
