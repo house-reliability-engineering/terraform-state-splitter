@@ -18,7 +18,9 @@ this document only covers *how* those requirements are met.
 ## Goals
 
 - Round-trip a Terraform V4 JSON state to a split YAML tree with no semantic loss.
-- Produce diffs that scope cleanly to a single resource instance.
+- Produce diffs that
+   - scope cleanly to a single resource instance
+   - show only actual attribute values changes (no unnecessary changes from decryption/encryption of the same plaintext value)
 - Encrypt the same fields that
   [sensitive annotator](https://github.com/vertexinc/infrastructure-state/blob/master/bin/terraform/sensitive_annotator.py)
   encrypts today, without polluting the state keys with marker suffixes.
